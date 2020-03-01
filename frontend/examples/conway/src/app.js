@@ -19,7 +19,7 @@ const Pixel = require('./pixel');
 const anypixel = require('anypixel');
 
 // Initial color column width.
-const PIXELS_PER_COLOR = 24;
+const NUM_COLUMNS = 4;
 
 // Color values.
 const BLUE = '#4285F4';
@@ -32,13 +32,16 @@ const COLORS = [BLUE, RED, YELLOW, GREEN];
 const MIN_LIVE = 2;
 const MAX_LIVE = 3;
 const BRING_TO_LIFE = 3;
+// Probability that a pixel with a 50% chance of being alive will be alive in
+// the next generation.
 const RANDOM_LIFE_PROBABILITY = 0.5;
-const GENERATION_LIFE = 1000;
+const GENERATION_LIFE = 42;
 
 const ctx = anypixel.canvas.getContext2D();
 
 const width = anypixel.config.width;
 const height = anypixel.config.height;
+const pixels_per_column = Math.floor(width / NUM_COLUMNS);
 
 // Maintain a map and a copy of the map. This allows us to 'tick' without
 // altering the current state of the map.
@@ -67,12 +70,12 @@ const init = () => {
 // Fill the board's initial state.
 function populateBoard() {
   colorIndex = 0;
-  colorCutoff = PIXELS_PER_COLOR;
+  colorCutoff = pixels_per_column;
   for (var i = 0; i < width; i++) {
     pixelMap[i] = new Array(height);
     pixelMapCopy[i] = new Array(height);
     if (i > colorCutoff) {
-      colorCutoff += PIXELS_PER_COLOR;
+      colorCutoff += pixels_per_column;
       colorIndex++;
     }
     for (var j = 0; j < height; j++) {
