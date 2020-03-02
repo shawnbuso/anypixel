@@ -37,6 +37,8 @@ const BRING_TO_LIFE = 3;
 const RANDOM_LIFE_PROBABILITY = 0.5;
 const GENERATION_LIFE = 42;
 
+const RANDOM_DROP_FREQUENCY = 1000;
+
 const ctx = anypixel.canvas.getContext2D();
 
 const width = anypixel.config.width;
@@ -54,7 +56,7 @@ const init = () => {
   document.addEventListener('onButtonDown', (event) => {
     const x = event.detail.x;
     const y = event.detail.y;
-    color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    color = randomColor();
     dropPattern(x, y, color);
   });
 
@@ -65,6 +67,9 @@ const init = () => {
     doConway();
     drawBoard();
   }, GENERATION_LIFE);
+
+  // Randomly drop patterns.
+  setInterval(dropRandomPattern, RANDOM_DROP_FREQUENCY);
 }
 
 // Fill the board's initial state.
@@ -88,6 +93,10 @@ const populateBoard = () => {
   drawBoard();
 }
 
+const randomColor = () => {
+  return COLORS[Math.floor(Math.random() * COLORS.length)];
+}
+
 // Draw the board from the Pixel array.
 const drawBoard = () => {
   for (var i = 0; i < pixelMap.length; i++) {
@@ -100,6 +109,13 @@ const drawBoard = () => {
       ctx.fillRect(i, j, 1, 1);
     }
   }
+}
+
+const dropRandomPattern = () => {
+  const x = Math.floor(Math.random() * width);
+  const y = Math.floor(Math.random() * height);
+  const color = randomColor();
+  dropPattern(x, y, color);
 }
 
 // Drop a pattern at the coordinates and of the color specified.
