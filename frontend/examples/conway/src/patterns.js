@@ -15,7 +15,7 @@
  */
 
 // Create a 2d array. For creating patterns.
-function make2dArray(width, height) {
+const make2dArray = (width, height) => {
   const arr = new Array(width);
   for (var i=0; i<width; i++) {
     arr[i] = new Array(height);

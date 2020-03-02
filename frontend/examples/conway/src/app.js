@@ -68,7 +68,7 @@ const init = () => {
 }
 
 // Fill the board's initial state.
-function populateBoard() {
+const populateBoard = () => {
   colorIndex = 0;
   colorCutoff = pixels_per_column;
   for (var i = 0; i < width; i++) {
@@ -89,7 +89,7 @@ function populateBoard() {
 }
 
 // Draw the board from the Pixel array.
-function drawBoard() {
+const drawBoard = () => {
   for (var i = 0; i < pixelMap.length; i++) {
     for (var j = 0; j < pixelMap[i].length; j++) {
       if (pixelMap[i][j].on) {
@@ -103,7 +103,7 @@ function drawBoard() {
 }
 
 // Drop a pattern at the coordinates and of the color specified.
-function dropPattern(x, y, color) {
+const dropPattern = (x, y, color) => {
   const pattern =
       Patterns.PATTERNS[Math.floor(Math.random() * Patterns.PATTERNS.length)];
   for (var i = 0; i < pattern.length; i++) {
@@ -128,7 +128,7 @@ function dropPattern(x, y, color) {
 }
 
 // Iterate one generation of the game.
-function doConway() {
+const doConway = () => {
   for (var i = 0; i < width; i++) {
     for (var j = 0; j < height; j++) {
       neighborInfo = countNeighbors(i, j);
@@ -151,7 +151,7 @@ function doConway() {
 
 // Count the live neighbors of a particular cell. Returns an array of
 // [live_neighbors, dominant_color].
-function countNeighbors(x, y) {
+const countNeighbors = (x, y) => {
   let count = 0;
   const colorMap = {
     [BLUE]: 0,
@@ -198,7 +198,7 @@ function countNeighbors(x, y) {
 }
 
 // Deep copy the provided 2d map.
-function deepCopy(map) {
+const deepCopy = (map) => {
   const newMap = new Array();
   for (var i = 0; i < map.length; i++) {
     newMap[i] = new Array(map[i].length);
