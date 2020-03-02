@@ -37,11 +37,14 @@ const BRING_TO_LIFE = 3;
 const RANDOM_LIFE_PROBABILITY = 0.5;
 const GENERATION_LIFE = 42;
 
+const RANDOM_DROP_FREQUENCY = 1000;
+const NUM_PATTERNS_TO_DROP = 4;
+
 const ctx = anypixel.canvas.getContext2D();
 
 const width = anypixel.config.width;
 const height = anypixel.config.height;
-const pixels_per_column = Math.floor(width / NUM_COLUMNS);
+const pixelsPerColumn = Math.floor(width / NUM_COLUMNS);
 
 // Maintain a map and a copy of the map. This allows us to 'tick' without
 // altering the current state of the map.
@@ -54,8 +57,7 @@ const init = () => {
   document.addEventListener('onButtonDown', (event) => {
     const x = event.detail.x;
     const y = event.detail.y;
-    color = COLORS[Math.floor(Math.random() * COLORS.length)];
-    dropPattern(x, y, color);
+    dropPattern(x, y, colorForX(x));
   });
 
   populateBoard();
@@ -65,27 +67,33 @@ const init = () => {
     doConway();
     drawBoard();
   }, GENERATION_LIFE);
+
+  // Randomly drop patterns.
+  setInterval(() => {
+    for (var i = 0; i < NUM_PATTERNS_TO_DROP; i++) {
+      dropRandomPattern()
+    }
+  }, RANDOM_DROP_FREQUENCY);
 }
 
 // Fill the board's initial state.
 const populateBoard = () => {
-  colorIndex = 0;
-  colorCutoff = pixels_per_column;
   for (var i = 0; i < width; i++) {
     pixelMap[i] = new Array(height);
     pixelMapCopy[i] = new Array(height);
-    if (i > colorCutoff) {
-      colorCutoff += pixels_per_column;
-      colorIndex++;
-    }
     for (var j = 0; j < height; j++) {
       const on = !!(Math.random() <= RANDOM_LIFE_PROBABILITY);
-      const color = COLORS[colorIndex % COLORS.length];
+      const color = colorForX(i);
       pixelMap[i][j] = new Pixel(on, color);
       pixelMapCopy[i][j] = new Pixel(on, color);
     }
   }
   drawBoard();
+}
+
+// Return the color that should be used for a pixel at the provided x position.
+const colorForX = (x) => {
+  return COLORS[Math.floor(x / pixelsPerColumn) % COLORS.length];
 }
 
 // Draw the board from the Pixel array.
@@ -102,7 +110,14 @@ const drawBoard = () => {
   }
 }
 
-// Drop a pattern at the coordinates and of the color specified.
+// Drop a random pattern at a random location.
+const dropRandomPattern = () => {
+  const x = Math.floor(Math.random() * width);
+  const y = Math.floor(Math.random() * height);
+  dropPattern(x, y, colorForX(x));
+}
+
+// Drop a random pattern at the coordinates and of the color specified.
 const dropPattern = (x, y, color) => {
   const pattern =
       Patterns.PATTERNS[Math.floor(Math.random() * Patterns.PATTERNS.length)];
