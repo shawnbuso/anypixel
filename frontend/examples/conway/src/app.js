@@ -57,7 +57,7 @@ const init = () => {
   document.addEventListener('onButtonDown', (event) => {
     const x = event.detail.x;
     const y = event.detail.y;
-    dropPattern(x, y, colorForX(x));
+    dropPattern(x, y, randomColor());
   });
 
   populateBoard();
@@ -89,6 +89,11 @@ const populateBoard = () => {
     }
   }
   drawBoard();
+}
+
+// Return the color that should be used for a pixel at the provided x position.
+const randomColor = (x) => {
+  return COLORS[Math.floor(Math.random() * COLORS.length)];
 }
 
 // Return the color that should be used for a pixel at the provided x position.
